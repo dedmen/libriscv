@@ -11,15 +11,16 @@ RSP<W>::RSP(riscv::Machine<W>& m, uint16_t port)
     ws2::init();
 
 	this->server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    u_long mode = 1;
-    ioctlsocket(server_fd, FIONBIO, &mode); // SOCK_NONBLOCK
+    //u_long mode = 1; // Having this makes process_one() exit instantly because it receives no packets when gdb is idle and returns 0 len
+    //ioctlsocket(server_fd, FIONBIO, &mode); // SOCK_NONBLOCK
 
-	int opt = 1;
-	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_BROADCAST, // SO_BROADCAST = SO_REUSEPORT
-        (const char*)&opt, sizeof(opt))) {
-        closesocket(server_fd);
-		throw MachineException(SYSTEM_CALL_FAILED, "Failed to enable REUSEADDR/PORT");
-	}
+    // This just always fails
+	//int opt = 1;
+	//if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_BROADCAST, // SO_BROADCAST = SO_REUSEPORT
+    //    (const char*)&opt, sizeof(opt))) {
+    //    closesocket(server_fd);
+	//	throw MachineException(SYSTEM_CALL_FAILED, "Failed to enable REUSEADDR/PORT");
+	//}
 	struct sockaddr_in address;
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
@@ -121,7 +122,7 @@ bool RSPClient<W>::send(const char* str)
     if (UNLIKELY(m_verbose)) {
         printf("TX >>> %.*s\n", plen, buffer);
     }
-    int len = ::write(sockfd, buffer, plen);
+    int len = ::send(sockfd, buffer, plen, 0);
     if (len <= 0) {
         this->close_now();
         return false;
