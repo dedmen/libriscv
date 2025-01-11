@@ -15,6 +15,7 @@
 #include <variant>
 #include "util/function.hpp"
 #include "types.hpp"
+#include <stdexcept>
 
 #ifndef RISCV_SYSCALLS_MAX
 #define RISCV_SYSCALLS_MAX   512

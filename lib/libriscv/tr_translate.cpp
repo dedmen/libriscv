@@ -5,6 +5,7 @@
 # endif
 #endif
 #include <cmath>
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <mutex>

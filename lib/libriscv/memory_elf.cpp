@@ -164,7 +164,7 @@ namespace riscv
 
 		const char* strtab = elf_offset<char>(shdr->sh_offset);
 		const char* end = strtab + shdr->sh_size;
-		if (end < strtab || end > m_binary.end())
+		if (end < strtab || end > m_binary.end()._Unwrapped())
 			throw MachineException(INVALID_PROGRAM, "Invalid ELF comment section");
 		// Check if the comment section is null-terminated at the end
 		if (UNLIKELY(end[-1] != '\0'))
@@ -178,7 +178,7 @@ namespace riscv
 			}
 			comments.push_back(comment);
 			strtab += comment.size() + 1;
-			if (strtab >= m_binary.end())
+			if (strtab >= m_binary.end()._Unwrapped())
 				break;
 		}
 		return comments;
