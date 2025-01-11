@@ -432,7 +432,7 @@ void RSPClient<W>::handle_writemem()
 {
 	uint64_t addr = 0;
 	uint32_t len = 0;
-	int ret = sscanf(buffer.c_str(), "X%"PRIx64", % x:", &addr, &len);
+	int ret = sscanf(buffer.c_str(), "X%"PRIx64",%x:", &addr, &len);
 	if (ret <= 0) {
 		send("E01");
 		return;
